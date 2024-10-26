@@ -2,12 +2,11 @@ name: Build Folia
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    inputs:
+      branch: # Параметр для выбора ветки
+        description: 'Branch to checkout'
+        required: true
+        default: 'master'
 
 jobs:
   build:
@@ -20,6 +19,7 @@ jobs:
         with:
           repository: PaperMC/Folia
           path: Folia-master
+          ref: ${{ github.event.inputs.branch }}
 
       # Устанавливаем Java
       - name: Set up JDK
