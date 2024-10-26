@@ -25,7 +25,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'graalvm'
+          distribution: 'oracle'
           java-version: '21'
 
       # Переходим в директорию проекта
