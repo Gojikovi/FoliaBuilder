@@ -1,6 +1,7 @@
 name: Build Folia
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -25,7 +26,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'graalvm'
-          java-version: '23'
+          java-version: '21'
 
       # Переходим в директорию проекта
       - name: Change directory to Folia-master
@@ -46,9 +47,17 @@ jobs:
         run: ./gradlew createMojmapBundlerJar
         working-directory: Folia-master
 
-      # Загружаем .jar файл в артефакты
+      # Получаем имя файла .jar
+      - name: Get JAR filename
+        id: get_jar
+        run: |
+          cd Folia-master/build/libs
+          JAR_NAME=$(ls *.jar | head -n 1)
+          echo "jar_name=$JAR_NAME" >> $GITHUB_ENV
+
+      # Загружаем .jar файл в артефакты с именем файла
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: Folia-build
-          path: Folia-master/build/libs/*.jar
+          name: ${{ env.jar_name }}
+          path: Folia-master/build/libs/${{ env.jar_name }}
