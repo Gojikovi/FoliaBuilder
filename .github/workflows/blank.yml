@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       # Клонируем репозиторий
@@ -40,24 +40,24 @@ jobs:
           
       # Выполняем команды Gradle для сборки
       - name: Apply patches
-        run: ./gradlew applyPatches
+        run: ./gradlew.bat applyPatches
         working-directory: Folia-master
 
       - name: Create Mojmap Bundler Jar
-        run: ./gradlew createMojmapBundlerJar
+        run: ./gradlew.bat createMojmapBundlerJar
         working-directory: Folia-master
 
       # Получаем имя файла .jar
       - name: Get JAR filename
         id: get_jar
         run: |
-          cd Folia-master/build/libs
-          JAR_NAME=$(ls *.jar | head -n 1)
-          echo "jar_name=$JAR_NAME" >> $GITHUB_ENV
+          cd Folia-master\build\libs
+          FOR %%f IN (*.jar) DO SET JAR_NAME=%%f
+          echo "jar_name=%JAR_NAME%" >> $GITHUB_ENV
 
       # Загружаем .jar файл в артефакты с именем файла
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.jar_name }}
-          path: Folia-master/build/libs/${{ env.jar_name }}
+          path: Folia-master\build\libs\${{ env.jar_name }}
