@@ -24,8 +24,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: 'latest'
+          distribution: 'graalvm'
+          java-version: '23'
 
       # Переходим в директорию проекта
       - name: Change directory to Folia-master
