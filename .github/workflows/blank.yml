@@ -30,7 +30,13 @@ jobs:
       # Переходим в директорию проекта
       - name: Change directory to Folia-master
         run: cd Folia-master
-
+        
+      # Настраиваем Git
+      - name: Configure Git
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          
       # Выполняем команды Gradle для сборки
       - name: Apply patches
         run: ./gradlew applyPatches
