@@ -1,0 +1,48 @@
+name: Build Folia
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Клонируем репозиторий
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          repository: PaperMC/Folia
+          path: Folia-master
+
+      # Устанавливаем Java
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 'latest'
+
+      # Переходим в директорию проекта
+      - name: Change directory to Folia-master
+        run: cd Folia-master
+
+      # Выполняем команды Gradle для сборки
+      - name: Apply patches
+        run: ./gradlew applyPatches
+        working-directory: Folia-master
+
+      - name: Create Mojmap Bundler Jar
+        run: ./gradlew createMojmapBundlerJar
+        working-directory: Folia-master
+
+      # Загружаем .jar файл в артефакты
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Folia-build
+          path: Folia-master/build/libs/*.jar
